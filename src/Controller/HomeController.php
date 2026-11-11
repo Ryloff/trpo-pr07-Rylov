@@ -5,7 +5,6 @@ final class HomeController
     public function index(): void
     {
         $path = __DIR__ . '/../../data/pages.json';
-
         $json  = file_get_contents($path);
         $pages = json_decode($json, true);
 
@@ -17,5 +16,15 @@ final class HomeController
         ];
 
         View::render('home', $data);
+    }
+
+    // НОВЫЙ МЕТОД для /about
+    public function about(): void
+    {
+        $data = [
+            'title' => 'О магазине',
+        ];
+
+        View::render('about', $data);
     }
 }
