@@ -10,6 +10,9 @@ final class View
         extract($data);
 
         // Подключаем HTML-шаблон из папки views/
-        require __DIR__ . '/../../views/' . $template . '.php';
+        $viewFile = __DIR__ . '/../../views/' . $template . '.php';
+
+        // ВОТ ГЛАВНАЯ СТРОКА: мы всегда подключаем layout!
+        require __DIR__ . '/../../views/layout.php';
     }
 }
