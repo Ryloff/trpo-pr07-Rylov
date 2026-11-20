@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Controller;
+use \View;
 final class HomeController
 {
     public function index(): void
@@ -18,7 +20,6 @@ final class HomeController
         View::render('home', $data);
     }
 
-    // НОВЫЙ МЕТОД для /about
     public function about(): void
     {
         $data = [

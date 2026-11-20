@@ -9,9 +9,9 @@ final class Router
         $this->routes = $routes;
     }
 
-    public function dispatch(string $uri): void
+    // Добавили $repo как зависимость
+    public function dispatch(string $uri, $repo = null): void
     {
-        // Маршрут не найден — отдаём 404
         if (!array_key_exists($uri, $this->routes)) {
             http_response_code(404);
             View::render('404', ['title' => '404 — Не найдено']);
@@ -24,7 +24,13 @@ final class Router
             $controllerClass = $action[0];
             $method = $action[1];
 
-            $controller = new $controllerClass();
+            // Если это CatalogController, передаем ему репозиторий
+            if ($controllerClass === 'App\Controller\CatalogController') {
+                $controller = new $controllerClass($repo);
+            } else {
+                $controller = new $controllerClass();
+            }
+            
             $controller->$method();
             return;
         }

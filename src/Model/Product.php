@@ -1,11 +1,20 @@
 <?php
 
-final class Product
+namespace App\Model;
+
+class Product
 {
     public function __construct(
         public int $id,
-        public string $title,
-        public float $price
-    ) {
+        public string $name,
+        public float $price,
+        public int $categoryId,
+        public int $stock // Дополнительное свойство из JSON
+    ) {}
+
+    // Метод для красивого вывода цены (п.11 задания)
+    public function getFormattedPrice(): string
+    {
+        return number_format($this->price, 0, ',', ' ') . ' ₽';
     }
 }

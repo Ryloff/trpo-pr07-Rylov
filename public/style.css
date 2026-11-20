@@ -1,4 +1,3 @@
-/* Обнуление базовых отступов */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -15,18 +14,17 @@ body {
     min-height: 100vh;
 }
 
-/* Шапка */
 header {
     background-color: #1a1f2e;
     color: white;
     padding: 15px 30px;
     display: flex;
     align-items: center;
-    gap: 15px; /* расстояние между логотипом и ссылкой */
+    gap: 15px; 
 }
 
 header img {
-    height: 40px; /* высота логотипа */
+    height: 40px;
 }
 
 header a {
@@ -36,9 +34,8 @@ header a {
     font-weight: bold;
 }
 
-/* Основной контент */
 main {
-    flex: 1; /* прижимает подвал к низу страницы */
+    flex: 1; 
     max-width: 800px;
     margin: 30px auto;
     padding: 20px;
@@ -52,7 +49,6 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* Список товаров */
 ul {
     list-style-type: none;
 }
@@ -62,7 +58,6 @@ li {
     border-bottom: 1px solid #eee;
 }
 
-/* Подвал */
 footer {
     text-align: center;
     padding: 20px;
