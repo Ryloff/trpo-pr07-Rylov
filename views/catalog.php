@@ -1,35 +1,21 @@
 <h1>Каталог товаров</h1>
 
-<!-- Блок фильтрации и сортировки -->
-<div class="filters">
-    <strong>Категории:</strong>
-    <a href="/catalog">Все</a>
-    <?php foreach ($categories as $cat): ?>
-        <a href="/catalog?category=<?= $cat->id ?>&sort=<?= $currentSort ?>">
-            <?= htmlspecialchars($cat->name) ?>
-        </a>
-    <?php endforeach; ?>
-    
-    <br><br>
-    
-    <strong>Сортировка:</strong>
-    <a href="/catalog?category=<?= $currentCategory ?? '' ?>&sort=name">По названию</a>
-    <a href="/catalog?category=<?= $currentCategory ?? '' ?>&sort=price">По цене</a>
-</div>
-
-<hr>
-
 <?php if (empty($products)): ?>
-    <p>В этой категории пока нет товаров.</p>
+    <p>Товаров пока нет.</p>
 <?php else: ?>
-    <ul>
+    <ul style="list-style-type: none; padding: 0;">
         <?php foreach ($products as $product): ?>
-            <li>
+            <li style="margin-bottom: 15px; padding: 10px; border: 1px solid #eee;">
                 <a href="/product/<?= $product->id ?>">
                     <strong><?= htmlspecialchars($product->name) ?></strong>
                 </a>
                 — <?= $product->getFormattedPrice() ?> 
-                (В наличии: <?= $product->stock ?> шт.)
+                
+                <!-- Кнопка добавления в корзину (из 9-й работы) -->
+                <form action="/cart/add" method="POST" style="display:inline; margin-left: 15px;">
+                    <input type="hidden" name="product_id" value="<?= $product->id ?>">
+                    <button type="submit">В корзину</button>
+                </form>
             </li>
         <?php endforeach; ?>
     </ul>

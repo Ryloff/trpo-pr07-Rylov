@@ -1,46 +1,49 @@
 <?php
+// 1. Запуск сессии (п.3)
+session_start();
 
-// 1. Простая автозагрузка классов (вместо require)
+// Автозагрузка
 spl_autoload_register(function ($class) {
-    // Префикс наших классов
     $prefix = 'App\\';
-    // Базовая директория, где лежат папки Models, Controllers, Repositories
     $base_dir = __DIR__ . '/../src/';
-
-    // Если класс не начинается с App\, пропускаем
     $len = strlen($prefix);
-    if (strncmp($prefix, $class, $len) !== 0) {
-        return;
-    }
-
-    // Отрезаем App\ от имени класса (получаем Repositories\ProductRepository)
-    $relative_class = substr($class, $len);
-
-    // Собираем путь: src/Repositories/ProductRepository.php
-    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
-
-    // Если файл существует — подключаем
-    if (file_exists($file)) {
-        require_once $file;
-    }
+    if (strncmp($prefix, $class, $len) !== 0) return;
+    $file = $base_dir . str_replace('\\', '/', substr($class, $len)) . '.php';
+    if (file_exists($file)) require_once $file;
 });
 
-// 2. Подключаем классы ядра (они не в namespace)
 require_once __DIR__ . '/../src/Core/Router.php';
 require_once __DIR__ . '/../src/Core/View.php';
 
 use App\Controller\HomeController;
 use App\Controller\CatalogController;
 use App\Controller\ErrorController;
+use App\Controller\CartController;
 use App\Repositories\ProductRepository;
+use App\Services\CartService;
+
+// Инициализация
+$productRepo = new ProductRepository(__DIR__ . '/../data/products.json');
+$cartService = new CartService();
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$method = $_SERVER['REQUEST_METHOD'];
 
-// Создаем репозиторий (он нам понадобится для каталога)
-$productRepo = new ProductRepository(__DIR__ . '/../data/products.json', __DIR__ . '/../data/categories.json');
+// --- ОБРАБОТКА POST-ЗАПРОСОВ (Действия корзины) ---
+if ($method === 'POST') {
+    $cartController = new CartController($cartService, $productRepo);
+    
+    if ($uri === '/cart/add') {
+        $cartController->add();
+    } elseif ($uri === '/cart/remove') {
+        $cartController->remove();
+    } elseif ($uri === '/cart/update') {
+        $cartController->update();
+    }
+    exit;
+}
 
-// 3. Обработка динамического маршрута /product/{id}
-// Если URL начинается с /product/ и содержит цифры
+// --- ОБРАБОТКА GET-ЗАПРОСОВ ---
 if (preg_match('/^\/product\/(\d+)$/', $uri, $matches)) {
     $id = (int)$matches[1];
     $controller = new CatalogController($productRepo);
@@ -48,7 +51,13 @@ if (preg_match('/^\/product\/(\d+)$/', $uri, $matches)) {
     exit;
 }
 
-// 4. Стандартная таблица маршрутов
+if ($uri === '/cart') {
+    $controller = new CartController($cartService, $productRepo);
+    $controller->index();
+    exit;
+}
+
+// Стандартные GET маршруты
 $routes = [
     '/'        => [HomeController::class, 'index'],
     '/catalog' => [CatalogController::class, 'index'],
@@ -57,4 +66,4 @@ $routes = [
 ];
 
 $router = new Router($routes);
-$router->dispatch($uri, $productRepo); // Передаем репозиторий в роутер (для контроллера каталога)
+$router->dispatch($uri, $productRepo);
