@@ -37,5 +37,9 @@
     </table>
 
     <h3>Итого к оплате: <?= number_format($total, 0, ',', ' ') ?> ₽</h3>
+    <!-- Добавь это в конец таблицы корзины -->
+    <div style="margin-top: 20px;">
+        <a href="/checkout" style="display: inline-block; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 5px;">Перейти к оформлению</a>
+    </div>
     <a href="/catalog">Продолжить покупки</a>
 <?php endif; ?>

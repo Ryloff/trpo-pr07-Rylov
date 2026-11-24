@@ -1,0 +1,10 @@
+[
+    {
+        "id": "ORD-6b0554535ac69",
+        "name": "Иван",
+        "email": "ivan@example.test",
+        "delivery": "pickup",
+        "total": 2700,
+        "date": "2026-11-24 09:09:39"
+    }
+]
